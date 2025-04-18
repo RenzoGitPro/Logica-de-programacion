@@ -4,15 +4,50 @@
 #include <thread>
 #include <cstdlib>
 #include <ctime>
-#include <typeinfo>
+#include <cstring>
 
 // se le avisa al el estandar std que quiero usar funciones sin necesidad de anteponer std::
 using std::cin;
 using std::cout;
 using std::endl;
 using std::invalid_argument;
+using std::string;
 using std::chrono::seconds;
 using std::this_thread::sleep_for;
+
+// Esta funcion hace que no tengamos que repetir varias veces las mismas lineas de codigo en diferentes partes de la funcion main
+// Como lo expresa el nombre la funcion, muestra en pantalla el mensaje que finaliza el juego y precede al return 0;
+void printMsgFin()
+{
+    /*
+        -cin.ignore() Limpia el buffer para ignorar el salto de linea que es interpretado como un "enter"
+        -cin.get() Evita que se cierre la consola
+        -Se reemplazo system("pause") de windows por cin.get() para hacer el codigo mas portable ya que el comando system("pause") es propio de windows
+    */
+    cout << "-------------FIN DEL JUEGO------------" << endl;
+    cin.ignore(1000, '\n');
+    cout << "presiona enter para cerrar el juego...";
+    cin.get();
+}
+// Funcion que valida que los datos ingresados sean los que se esperan
+// La funcion retorna un string "ok" si todo esta bien, de lo contrario si cin.fail() es true, retorna un mensaje de advertencia
+string validarDatos()
+{
+
+    if (cin.fail())
+    {
+
+        cin.clear();            // Se borra el error en cin para que esta funcion se pueda volver a usar normalmente
+        cin.ignore(1000, '\n'); // Se "Vacia" el cin ignorando cualquier caracter introducido anteriormente o cualquier salto de linea
+        cout << "Haz introducido un tipo de dato invalido. Tenes que ingresar numeros." << endl;
+
+        return "no";
+    }
+    else
+    {
+        return "yes";
+    }
+}
 
 // creacion de la funcion principal donde se ejecuta el codigo principal del programa
 int main()
@@ -34,69 +69,76 @@ int main()
     cout << "Bienvenido al juego de adivinanzas, donde el objetivo es que adivines el numero generado de forma aleatoria antes de que se te acaben los intentos :)" << endl;
 
     cout << "\nAntes de empezar tenes que indicar dentro de que rango de numeros queres que generemos un numero aleatorio para vos" << endl;
-    
+
     /*
-        -El bucle while se ejecutara mientras no se rompa su flujo de ejecucion ya que la condicion esta establecida como true, 
+        -El bucle while se ejecutara mientras no se rompa su flujo de ejecucion ya que la condicion esta establecida como true,
         lo que ocasionara que se repita la pregunta hasta que el usuario ingrese un tipo de dato valido y se ejecute el break;
     */
-    while(true)
+    while (true)
     {
+
         cout << "ingresa el limite inferior: ";
         cin >> limite_inferior;
 
-        if(cin.fail()) //se verifica si cin.fail() es true, si no hay un error en cin sera false
+        //if que evalua lo que retorna la funcion validarDatos()
+        if (validarDatos() == "yes")
         {
-            cout << "Tenes que ingresar numeros. Cualquier otro tipo de caracter es invalido." << endl;
-            cin.clear(); //Se borra el error en cin para que esta funcion se pueda volver a usar normalmente
-            cin.ignore(1000, '\n'); //Se "Vacia" el cin ignorando cualquier caracter introducido anteriormente o cualquier salto de linea
 
-        } else if(limite_inferior < 0)
-        {
-            cout << "El limite inferior no puede ser menor a 0" << endl;
-        }
-        else {
-            break; // rompe el while y la ejecucion vuelve al scope global
+            if (limite_inferior < 0)
+            {
+                cout << "El limite inferior no puede ser menor a 0" << endl;
+            }
+            else
+            {
+                break; // rompe el while y la ejecucion vuelve al scope global
+            }
         }
     }
 
-    while(true)
+    while (true)
     {
+
         cout << "Ahora ingresa el limite superior: ";
         cin >> limite_superior;
-
-        if(cin.fail()) //se verifica si cin.fail() es true, si no hay un error en cin sera false
+        
+        //if que elavua lo que retorna la funcion validarDatos()
+        if (validarDatos() == "yes")
         {
-            cout << "Tenes que ingresar numeros. Cualquier otro tipo de caracter es invalido." << endl;
-            cin.clear(); //Se borra el error en cin para que esta funcion se pueda volver a usar normalmente
-            cin.ignore(1000, '\n'); //Se "Vacia" el cin ignorando cualquier caracter introducido anteriormente o cualquier salto de linea
 
-        } else if(limite_superior < limite_inferior)
-        {
-            cout << "El limite superior no puede ser menor al limite inferior" << endl;
-        }
-        else {
-            break; // rompe el while y la ejecucion vuelve al scope global
+            if (limite_superior < limite_inferior)
+            {
+                cout << "El limite superior no puede ser menor al limite inferior" << endl;
+            }
+            else if (limite_superior == limite_inferior)
+            {
+                cout << "El limite superior no puede ser igual al limite inferior, debe ser mayor" << endl;
+            }
+            else
+            {
+                break; // rompe el while y la ejecucion vuelve al scope global
+            }
         }
     }
 
-    while(true)
+    while (true)
     {
+
         cout << "\nOk. Cuantos intentos queres tener? pueden ser tanto como quieras: ";
         cin >> cantidad_intentos;
 
-        if(cin.fail()) //se verifica si cin.fail() es true, si no hay un error en cin sera false
+        //if que evalua lo que retorna la funcion validarDatos()
+        if (validarDatos() == "yes")
         {
-            cout << "Tenes que ingresar numeros. Cualquier otro tipo de caracter es invalido." << endl;
-            cin.clear(); //Se borra el error en cin para que esta funcion se pueda volver a usar normalmente
-            cin.ignore(1000, '\n'); //Se "Vacia" el cin ignorando cualquier caracter introducido anteriormente o cualquier salto de linea
 
-        } else if(cantidad_intentos <= 0) //cantidad_intentos no puede ser igual o menor que 0 
-        {
-            //si cantidad_intentos es igual o menor que 0, se muestra un mensaje al usuario y se ejecuta el bucle hasta que introduzca un cantidad valida
-            cout << "La cantidad de intentos maximos debe ser mayor a 0" << endl;
-        }
-        else {
-            break; // rompe el while y devuelve el control de la ejecucion al scope global
+            if (cantidad_intentos <= 0) // cantidad_intentos no puede ser igual o menor que 0
+            {
+                // si cantidad_intentos es igual o menor que 0, se muestra un mensaje al usuario y se ejecuta el bucle hasta que introduzca un cantidad valida
+                cout << "La cantidad de intentos maximos debe ser mayor a 0" << endl;
+            }
+            else
+            {
+                break; // rompe el while y devuelve el control de la ejecucion al scope global
+            }
         }
     }
 
@@ -142,7 +184,7 @@ int main()
             cin >> posible_numero;
 
             /*
-                -Cual el jugador introduzca un dato se evaluara si hay un error haciendo uso de cin.fail()
+                -Cual el jugador introduzca un dato se evaluara si hay un error con el tipo de dato ingresado haciendo uso de cin.fail()
                 -Si cin.fail() detecta un tipo de dato invalido su valor sera true entonces se ejecutara el if mostrando un mensaje de advertencia,
                 luego se borrara el valor de cin con cin.clear()
                 por ultimo con cin.ignore() se eliminan los caracteres introducidos
@@ -156,11 +198,11 @@ int main()
 
                 // Cada dato mal introducido tambien se contara como intento fallido y se le mostrara la informacion en pantalla
                 intentos_realizados++;
-                z--; /*Es probable que el while se ejecute varias veces y el for quede pausado, 
-                esto ocasionara que z no se decremente tras cada vuelta del ciclo while, lo que podria generar un problema 
-                si el jugador de repente introduce un dato valido ya que tendria mas intentos de los que 
-                les corresponden, entonces es necesario ir decrementando z manualmente dentro del while para que cuando se 
-                rompa el bucle y el control de la ejecucion pase al scope del for 
+                z--; /*Es probable que el while se ejecute varias veces y el for quede pausado,
+                esto ocasionara que z no se decremente tras cada vuelta del ciclo while, lo que podria generar un problema
+                si el jugador de repente introduce un dato valido ya que tendria mas intentos de los que
+                les corresponden, entonces es necesario ir decrementando z manualmente dentro del while para que cuando se
+                rompa el bucle y el control de la ejecucion pase al scope del for
                 el jugador solo cuente con los intentos restantes teniendo en cuenta los que ya gasto dentro del scope del while*/
 
                 cout << "Intentos realizados: " << intentos_realizados << endl;
@@ -169,10 +211,8 @@ int main()
 
                 if (z == 0)
                 {
-                    cout << "Intentos agotados. Suerte para la proxima" << endl;
-                    cout << "-------------FIN DEL JUEGO------------" << endl;
-                    cout << "presiona enter para cerrar el juego...";
-                    cin.get();
+                    cout << "Intentos agotados. solo tenias " << cantidad_intentos << ". Suerte para la proxima" << endl;
+                    printMsgFin();
                     return 0; // Finaliza la ejecucion del codigo
                 }
             }
@@ -195,10 +235,7 @@ int main()
             cout << "Tenias " << cantidad_intentos << " intentos ";
             cout << "y has realizado " << intentos_realizados << endl;
 
-            cout << "-------------FIN DEL JUEGO------------" << endl;
-            cin.ignore(); // Limpia el buffer para ignorar el salto de linea que es interpretado como un "enter"
-            cout << "Presiona enter para cerrar el juego...";
-            cin.get(); // Evita que se cierre la consola
+            printMsgFin();
             return 0;  // Finaliza la ejecucion del codigo porque termino el juego
         }
 
@@ -230,23 +267,14 @@ int main()
         {
             cout << "El numero que ingresaste no se encuentra dentro del rango establecido por que es mayor a " << limite_superior << endl;
         }
-        
+
         cout << "Intentos realizados: " << intentos_realizados << endl;
         cout << "Intentos restantes: " << cantidad_intentos - intentos_realizados << endl;
         cout << "---------------------------------" << endl;
     }
 
-    // Si el se queda sin intentos se lo hacemos saber
-    cout << "Intentos agotados. Suerte para la proxima" << endl;
-
-    /*
-        -cin.ignore() Limpia el buffer para ignorar el salto de linea que es interpretado como un "enter"
-        -cin.get() Evita que se cierre la consola
-        -Se reemplazo system("pause") de windows por cin.get() para hacer el codigo mas portable ya que el comando system("pause") es propio de windows
-    */
-    cout << "-------------FIN DEL JUEGO------------" << endl;
-    cin.ignore();
-    cout << "\nPresiona enter para cerrar el juego...";
-    cin.get();
+    // Si el jugador/a se queda sin intentos se lo hacemos saber
+    cout << "Intentos agotados. solo tenias " << cantidad_intentos << ". Suerte para la proxima" << endl;
+    printMsgFin();
     return 0; // Finaliza la ejecucion del codigo
 }
