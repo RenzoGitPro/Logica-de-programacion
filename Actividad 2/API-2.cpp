@@ -25,7 +25,6 @@ void printMsgFin()
         -Se reemplazo system("pause") de windows por cin.get() para hacer el codigo mas portable ya que el comando system("pause") es propio de windows
     */
     cout << "-------------FIN DEL JUEGO------------" << endl;
-    cin.ignore(1000, '\n');
     cout << "presiona enter para cerrar el juego...";
     cin.get();
 }
@@ -80,7 +79,7 @@ int main()
         cout << "ingresa el limite inferior: ";
         cin >> limite_inferior;
 
-        //if que evalua lo que retorna la funcion validarDatos()
+        // if que evalua lo que retorna la funcion validarDatos()
         if (validarDatos() == "yes")
         {
 
@@ -100,8 +99,8 @@ int main()
 
         cout << "Ahora ingresa el limite superior: ";
         cin >> limite_superior;
-        
-        //if que elavua lo que retorna la funcion validarDatos()
+
+        // if que elavua lo que retorna la funcion validarDatos()
         if (validarDatos() == "yes")
         {
 
@@ -126,7 +125,7 @@ int main()
         cout << "\nOk. Cuantos intentos queres tener? pueden ser tanto como quieras: ";
         cin >> cantidad_intentos;
 
-        //if que evalua lo que retorna la funcion validarDatos()
+        // if que evalua lo que retorna la funcion validarDatos()
         if (validarDatos() == "yes")
         {
 
@@ -236,7 +235,7 @@ int main()
             cout << "y has realizado " << intentos_realizados << endl;
 
             printMsgFin();
-            return 0;  // Finaliza la ejecucion del codigo porque termino el juego
+            return 0; // Finaliza la ejecucion del codigo porque termino el juego
         }
 
         /*
